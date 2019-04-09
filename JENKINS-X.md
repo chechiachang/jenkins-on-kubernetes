@@ -16,6 +16,7 @@ jx version
 ```
 CLUSTER_NAME=test
 PROJECT_ID=
+DEFAULT_PASSWORD=mySecretPassWord123
 
 jx create cluster gke \
   --cluster-name=${CLUSTER_NAME} \
@@ -26,7 +27,7 @@ jx create cluster gke \
   --max-num-nodes=3 \
   --min-num-nodes=3 \
   --version=0.03832 \
-  --default-admin-password=mySecretPassWord123 \
+  --default-admin-password=${DEFAULT_PASSWORD} \
   --preemptible
 
 gcloud container clusters get-credentials ${CLUSTER_NAME}
@@ -46,3 +47,27 @@ jx install
 - Pick default workload build pack
   - [x] Kubernetes Workloads: Automated CI+CD with GitOps Promotion
   - Library Workloads: CI+Release but no CD
+
+---
+
+# Operations
+
+jx diagnose
+
+---
+
+# Create jenkins-x.yml
+
+In source code repository:
+
+Import jx to remote jenkins-server
+```
+jx import --url git@github.com:chechiachang/all-go-rithm.git
+```
+
+Generate / Update jenkins-x.yml
+```
+jx create step
+```
+
+git commit & push
