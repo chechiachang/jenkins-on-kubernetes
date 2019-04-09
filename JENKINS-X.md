@@ -25,7 +25,7 @@ jx create cluster gke \
   --zone=asia-east1-b \
   --machine-type=n1-standard-2 \
   --max-num-nodes=3 \
-  --min-num-nodes=3 \
+  --min-num-nodes=1 \
   --version=0.03832 \
   --default-admin-password=${DEFAULT_PASSWORD} \
   --preemptible
