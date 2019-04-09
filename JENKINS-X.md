@@ -71,3 +71,14 @@ jx create step
 ```
 
 git commit & push
+
+# Check jenkins-x examples
+
+https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs
+
+---
+
+PROS
+
+CONS
+Jenkinx server consumes lots memory
