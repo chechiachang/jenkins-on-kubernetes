@@ -113,15 +113,19 @@ Options:
   - chechiachang
 
 ```
+INFO[0465]
 Your Kubernetes context is now set to the namespace: jx
-INFO[0231] To switch back to your original namespace use: jx namespace jx
-INFO[0231] Or to use this context/namespace in just one terminal use: jx shell
-INFO[0231] For help on switching contexts see: https://jenkins-x.io/developing/kube-context/
+INFO[0465] To switch back to your original namespace use: jx namespace default
+INFO[0465] Or to use this context/namespace in just one terminal use: jx shell
+INFO[0465] For help on switching contexts see: https://jenkins-x.io/developing/kube-context/
 
-INFO[0231] To import existing projects into Jenkins:       jx import
-INFO[0231] To create a new Spring Boot microservice:       jx create spring -d web -d actuator
-INFO[0231] To create a new microservice from a quickstart: jx create quickstart
+INFO[0465] To import existing projects into Jenkins:       jx import
+INFO[0465] To create a new Spring Boot microservice:       jx create spring -d web -d actuator
+INFO[0465] To create a new microservice from a quickstart: jx create quickstart
 ```
+
+Access Static Jenkins Server through Domain with username and password
+Domain http://jenkins.jx.11.22.33.44.nip.io/
 
 # Uninstall
 
@@ -130,8 +134,10 @@ jx uninstall
 # rm -rf ~/.jx
 ```
 ---
+Setup Application CI/CD Pipeline
+===
 
-# Quickstart
+# Create Quickstart Repository
 
 ```
 kubectl get pods --namespace jx --watch
@@ -163,6 +169,9 @@ INFO[0121] When the pipeline is complete:  jx get applications
 
 # Check log of the first run
 
+```
+jx logs pipeline
+```
 
 # Add Step to Pipeline
 
@@ -185,26 +194,20 @@ A build-pack pod started after git push. Watch pod status with kubectl.
 kubectl get pods --namespace jx --watch
 ```
 
-# Check Build Status on Prow
+# Check Build Status on Prow (Serverless)
 
 http://deck.jx.130.211.245.13.nip.io/
 Login with username and password
 
 ---
 
-# Operations
-
-jx diagnose
-
----
-
-# Create jenkins-x.yml
+# Import Existing Repository
 
 In source code repository:
 
-Import jx to remote jenkins-server
+Import jx to remote jenkins-server. This will apply a Jenkinsfile to repository by default
 ```
-jx import --url git@github.com:chechiachang/all-go-rithm.git
+jx import --url git@github.com:chechiachang/serverless-jenkins-quickstart.git
 ```
 
 Update jenkins-x.yml
@@ -230,6 +233,16 @@ kc config set-context gke_my-project_asia-east1-b_jenkins \
   --namespace=jx
 ```
 
+---
+
 # Check jenkins-x examples
 
 https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs
+
+---
+
+# Operations
+
+jx diagnose
+
+---
