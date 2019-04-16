@@ -1,0 +1,30 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  artifacts:
+  - image: changeme
+    context: .
+    docker: {}
+  tagPolicy:
+    envTemplate:
+      template: '{{.DOCKER_REGISTRY}}/chechiachang/jenkins-on-kubernetes:{{.VERSION}}'
+  local: {}
+deploy:
+  kubectl: {}
+profiles:
+- name: dev
+  build:
+    artifacts:
+    - docker: {}
+    tagPolicy:
+      envTemplate:
+        template: '{{.DOCKER_REGISTRY}}/chechiachang/jenkins-on-kubernetes:{{.DIGEST_HEX}}'
+    local: {}
+  deploy:
+    helm:
+      releases:
+      - name: jenkins-on-kubernetes
+        chartPath: charts/jenkins-on-kubernetes
+        setValueTemplates:
+          image.repository: '{{.DOCKER_REGISTRY}}/chechiachang/jenkins-on-kubernetes'
+          image.tag: '{{.DIGEST_HEX}}'
