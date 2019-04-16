@@ -6,24 +6,6 @@ This document describe hot to create a Jenkins-on-Kubernetes service on Google K
 
 ---
 
-# Install jx on Local Machine
-
-[https://github.com/jenkins-x/jx/releases](https://github.com/jenkins-x/jx/releases)
-
-```
-JX_VERSION=v2.0.2
-OS_ARCH=darwin-amd64
-#OS_ARCH=linux-amd64
-curl -L https://github.com/jenkins-x/jx/releases/download/"${JX_VERSION}"/jx-"${OS_ARCH}".tar.gz | tar xzv
-sudo mv jx /usr/local/bin
-jx version
-
-NAME             VERSION
-jx               2.0.2
-git              git version 2.20.1
-Operating System Mac OS X 10.14.4 build 18E226
-```
-
 # Create GKE cluster & Get Credentials
 
 ```
@@ -36,7 +18,7 @@ CLUSTER_NAME=jenkins
 
 gcloud container clusters create ${CLUSTER_NAME} \
   --num-nodes 1 \
-  --machine-type n1-standard-2 \
+  --machine-type n1-standard-4 \
   --enable-autoscaling \
   --min-nodes 1 \
   --max-nodes 2 \
@@ -50,14 +32,34 @@ gcloud container clusters get-credentials ${CLUSTER_NAME}
 kubectl get nodes
 ```
 
+# Install jx on Local Machine
+
+[https://github.com/jenkins-x/jx/releases](https://github.com/jenkins-x/jx/releases)
+
+```
+JX_VERSION=v2.0.2
+OS_ARCH=darwin-amd64
+#OS_ARCH=linux-amd64
+curl -L https://github.com/jenkins-x/jx/releases/download/"${JX_VERSION}"/jx-"${OS_ARCH}".tar.gz | tar xzv
+sudo mv jx /usr/local/bin
+jx version
+
+NAME               VERSION
+jx                 2.0.2
+Kubernetes cluster v1.11.7-gke.12
+kubectl            v1.11.9-dispatcher
+helm client        v2.11.0+g2e55dbe
+helm server        v2.11.0+g2e55dbe
+git                git version 2.20.1
+Operating System   Mac OS X 10.14.4 build 18E226
+```
+
 # Install Jenkins Platform with jx
 
 ```
-DEFAULT_USERNAME=myadmin
 DEFAULT_PASSWORD=mySecretPassWord123
 
 jx install \
-  --default-admin-username=${DEFAULT_USERNAME} \
   --default-admin-password=${DEFAULT_PASSWORD} \
   --provider='gke'
 ```
@@ -67,8 +69,8 @@ Options:
 - Enter Github personal api token for CI/CD
 - Enable Github as Git pipeline server
 - Select Jenkins installation type: 
-  - [x] Serverless Jenkins X Pipelines with Tekon
-  - Static Master Jenkins
+  - [] Serverless Jenkins X Pipelines with Tekon
+  - [x] Static Master Jenkins
 - Pick default workload build pack
   - [x] Kubernetes Workloads: Automated CI+CD with GitOps Promotion
   - Library Workloads: CI+Release but no CD
@@ -90,7 +92,69 @@ INFO[0231] To create a new microservice from a quickstart: jx create quickstart
 
 ```
 jx uninstall
+# rm -rf ~/.jx
 ```
+---
+
+# Quickstart
+
+```
+kubectl get pods --namespace jx --watch
+```
+
+```
+# cd workspace
+jx create quickstart
+```
+
+- Which organisation do you want to use? chechiachang
+- Enter the new repository name:  serverless-jenkins-quickstart
+- select the quickstart you wish to create  [Use arrows to move, type to filter]
+  angular-io-quickstart
+  aspnet-app
+  dlang-http
+> golang-http
+  jenkins-cwp-quickstart
+  jenkins-quickstart
+  node-http
+
+```
+INFO[0121] Watch pipeline activity via:    jx get activity -f serverless-jenkins-quickstart -w
+INFO[0121] Browse the pipeline log via:    jx get build logs chechiachang/serverless-jenkins-quickstart/master
+INFO[0121] Open the Jenkins console via    jx console
+INFO[0121] You can list the pipelines via: jx get pipelines
+INFO[0121] When the pipeline is complete:  jx get applications
+```
+
+# Check log of the first run
+
+
+# Add Step to Pipeline
+
+Add a setup step for pullrequest
+```
+cd serverless-jenkins-quickstart
+jx create step --pipeline pullrequest \
+  --lifecycle setup \
+  --mode replace \
+  --sh "echo hello world"
+```
+
+Validate pipeline step for each modification
+```
+jx step validate
+```
+
+A build-pack pod started after git push. Watch pod status with kubectl.
+```
+kubectl get pods --namespace jx --watch
+```
+
+# Check Build Status on Prow
+
+http://deck.jx.130.211.245.13.nip.io/
+Login with username and password
+
 ---
 
 # Operations
@@ -108,22 +172,29 @@ Import jx to remote jenkins-server
 jx import --url git@github.com:chechiachang/all-go-rithm.git
 ```
 
-Generate / Update jenkins-x.yml
+Update jenkins-x.yml
 ```
 jx create step
 ```
 
 git commit & push
 
-Draft create
+---
+
+# Trouble Shooting
+
+### Failed to get jx resources
+
+```
+jx get pipelines
+```
+
+Make sure your jx (or kubectl) context is with the correct GKE and namespace
+```
+kc config set-context gke_my-project_asia-east1-b_jenkins \
+  --namespace=jx
+```
 
 # Check jenkins-x examples
 
 https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs
-
----
-
-PROS
-
-CONS
-Jenkinx server consumes lots memory
