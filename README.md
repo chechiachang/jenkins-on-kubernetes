@@ -72,3 +72,9 @@ jx start pipeline --filter='jenkins-x-on-kubernetes/feature-add-test'
 
 jx get activities --filter='jenkins-x-on-kubernetes'
 ```
+
+# Create Pull Request
+
+```
+jx create pullrequest
+```
