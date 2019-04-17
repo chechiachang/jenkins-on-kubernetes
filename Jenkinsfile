@@ -15,7 +15,16 @@ pipeline {
         container('go') {
           checkout scm
 
-          sh "make test"
+          //sh "make test"
+        }
+      }
+    }
+    stage('Build') {
+      steps {
+        container('go') {
+          checkout scm
+
+          sh "make build"
         }
       }
     }
