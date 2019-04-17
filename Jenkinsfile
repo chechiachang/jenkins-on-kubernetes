@@ -1,10 +1,12 @@
+def app_dir = '/home/jenkins/go/src/github.com/chechiachang/jenkins-x-on-kubernetes'
+
 pipeline {
   agent {
     label "jenkins-go"
   }
   environment {
     ORG = 'chechiachang'
-    APP_NAME = 'jenkins-on-kubernetes'
+    APP_NAME = 'jenkins-x-on-kubernetes'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
   }
   stages {
@@ -28,13 +30,13 @@ pipeline {
       }
       steps {
         container('go') {
-          dir('/home/jenkins/go/src/github.com/chechiachang/jenkins-on-kubernetes') {
+          dir(app_dir) {
             checkout scm
             sh "make linux"
             sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
           }
-          dir('/home/jenkins/go/src/github.com/chechiachang/jenkins-on-kubernetes/charts/preview') {
+          dir(app_dir + '/charts/preview') {
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
           }
@@ -47,7 +49,7 @@ pipeline {
       }
       steps {
         container('go') {
-          dir('/home/jenkins/go/src/github.com/chechiachang/jenkins-on-kubernetes') {
+          dir(app_dir) {
             checkout scm
 
             // ensure we're not on a detached head
@@ -71,7 +73,7 @@ pipeline {
       }
       steps {
         container('go') {
-          dir('/home/jenkins/go/src/github.com/chechiachang/jenkins-on-kubernetes/charts/jenkins-on-kubernetes') {
+          dir(app_dir + '/charts/jenkins-on-kubernetes') {
             sh "jx step changelog --version v\$(cat ../../VERSION)"
 
             // release the helm chart
