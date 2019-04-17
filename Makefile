@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 GO := GO15VENDOREXPERIMENT=1 go
-NAME := jenkins-on-kubernetes
+NAME := jenkins-x-on-kubernetes
 OS := $(shell uname)
 MAIN_GO := main.go
 ROOT_PACKAGE := $(GIT_PROVIDER)/chechiachang/$(NAME)
