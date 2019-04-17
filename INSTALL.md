@@ -238,11 +238,3 @@ kc config set-context gke_my-project_asia-east1-b_jenkins \
 # Check jenkins-x examples
 
 https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs
-
----
-
-# Operations
-
-jx diagnose
-
----
