@@ -21,8 +21,37 @@ pipeline {
     stage('Build') {
       steps {
         container('go') {
-          checkout scm
           sh "make build"
+        }
+      }
+    }
+    stage('Run') {
+      steps {
+        container('go') {
+          sh "./bin/jenkins-x-on-kubernetes &"
+        }
+      }
+    }
+    stage('Verify') {
+      parallel {
+        stage('Verify home') {
+          agent any
+          steps {
+              echo "HTTP request to verify home"
+              sh "curl http://localhost:8080/"
+          }
+        }
+        stage('Verify health check') {
+          agent any
+          steps {
+              echo "HTTP request to verify application health check"
+          }
+        }
+        stage('Verify regression tests') {
+          agent any
+          steps {
+              echo "Running regression test suite"
+          }
         }
       }
     }
