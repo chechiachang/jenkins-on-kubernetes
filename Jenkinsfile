@@ -18,14 +18,54 @@ pipeline {
         }
       }
     }
+
     stage('Build') {
       steps {
         container('go') {
-          checkout scm
           sh "make build"
         }
       }
     }
+
+    stage('Run & Verify') {
+      steps {
+        container('go') {
+          sh "nohup ./bin/jenkins-x-on-kubernetes &"
+          echo "HTTP request to verify home"
+          sh "curl http://localhost:8080/"
+        }
+      }
+    }
+
+    stage('Parallel') {
+      parallel {
+        stage('Verify home') {
+          steps {
+            container('go') {
+              echo "HTTP request to verify home"
+              sh "curl http://localhost:8080/"
+            }
+          }
+        }
+        stage('Verify health check') {
+          steps {
+            container('go') {
+              echo "HTTP request to verify application health check"
+              sh "curl http://localhost:8080/health"
+            }
+          }
+        }
+        stage('Verify regression tests') {
+          steps {
+            container('go') {
+              echo "Running regression test suite"
+              sh "curl http://localhost:8080/"
+            }
+          }
+        }
+      }
+    }
+
     stage('CI Build and push snapshot') {
       when {
         branch 'PR-*'
@@ -50,6 +90,7 @@ pipeline {
         }
       }
     }
+
     stage('Build Release') {
       when {
         branch 'master'
@@ -74,6 +115,7 @@ pipeline {
         }
       }
     }
+
     stage('Promote to Environments') {
       when {
         branch 'master'

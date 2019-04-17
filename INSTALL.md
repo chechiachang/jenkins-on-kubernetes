@@ -235,6 +235,13 @@ kc config set-context gke_my-project_asia-east1-b_jenkins \
 
 ---
 
+# Why not use helm chart?
+
+It's readlly depend on what we need in CI/CD automation.
+
+[Jenkins Helm Chart](https://github.com/helm/charts/tree/master/stable/jenkins) create Jenkins master and slave cluster on Kubernetes utilizing the Jenkins Kubernetes plugin.
+Jenkin Platform with jx is Jenkins Platform native to Kubernetes. It comes with powerful cloud native components like Prow automation, Nexus, Docker Registry, Tekton Pipeline, ...
+
 # Check jenkins-x examples
 
 https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs

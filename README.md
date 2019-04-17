@@ -64,9 +64,6 @@ INFO[0003] view the log at: http://jenkins.jx.35.187.146.68.nip.io/job/chechiach
 ...
 ```
 
-- http based
-- Require log as Jenkins user
-
 # Trigger Build & Check Activity
 
 ```
