@@ -63,5 +63,8 @@ lint: vendor | $(PKGS) $(GOLINT) # ❷
 
 # Jenkins-X
 
+activities:
+	jx get activities --filter=$(NAME) --watch
+
 validate:
 	jx steps validate
