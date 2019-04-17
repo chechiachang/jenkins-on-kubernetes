@@ -37,28 +37,30 @@ pipeline {
       }
     }
 
-    parallel {
-      stage('Verify home') {
-        steps {
-          container('go') {
-            echo "HTTP request to verify home"
-            sh "curl http://localhost:8080/"
+    stage('Parallel') {
+      parallel {
+        stage('Verify home') {
+          steps {
+            container('go') {
+              echo "HTTP request to verify home"
+              sh "curl http://localhost:8080/"
+            }
           }
         }
-      }
-      stage('Verify health check') {
-        steps {
-          container('go') {
-            echo "HTTP request to verify application health check"
-            sh "curl http://localhost:8080/health"
+        stage('Verify health check') {
+          steps {
+            container('go') {
+              echo "HTTP request to verify application health check"
+              sh "curl http://localhost:8080/health"
+            }
           }
         }
-      }
-      stage('Verify regression tests') {
-        steps {
-          container('go') {
-            echo "Running regression test suite"
-            sh "curl http://localhost:8080/"
+        stage('Verify regression tests') {
+          steps {
+            container('go') {
+              echo "Running regression test suite"
+              sh "curl http://localhost:8080/"
+            }
           }
         }
       }
