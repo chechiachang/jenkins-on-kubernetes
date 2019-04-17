@@ -25,34 +25,38 @@ pipeline {
         }
       }
     }
-    stage('Run') {
+    stage('Run & Verify') {
       steps {
         container('go') {
-          sh "nohup bash ./bin/jenkins-x-on-kubernetes &"
+          sh "nohup ./bin/jenkins-x-on-kubernetes &"
+          echo "HTTP request to verify home"
+          sh "curl http://localhost:8080/"
         }
       }
-    }
-    stage('Verify') {
+    stage('Parallel Run') {
       parallel {
         stage('Verify home') {
-          agent any
           steps {
+            container('go') {
               echo "HTTP request to verify home"
               sh "curl http://localhost:8080/"
+            }
           }
         }
         stage('Verify health check') {
-          agent any
           steps {
+            container('go') {
               echo "HTTP request to verify application health check"
               sh "curl http://localhost:8080/health"
+            }
           }
         }
         stage('Verify regression tests') {
-          agent any
           steps {
+            container('go') {
               echo "Running regression test suite"
               sh "curl http://localhost:8080/"
+            }
           }
         }
       }
