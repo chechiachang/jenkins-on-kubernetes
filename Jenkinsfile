@@ -14,8 +14,7 @@ pipeline {
       steps {
         container('go') {
           checkout scm
-
-          //sh "make test"
+          sh "make test"
         }
       }
     }
@@ -23,7 +22,6 @@ pipeline {
       steps {
         container('go') {
           checkout scm
-
           sh "make build"
         }
       }
