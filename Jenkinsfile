@@ -28,7 +28,7 @@ pipeline {
     stage('Run') {
       steps {
         container('go') {
-          sh "./bin/jenkins-x-on-kubernetes &"
+          sh "nohup bash ./bin/jenkins-x-on-kubernetes &"
         }
       }
     }
@@ -45,12 +45,14 @@ pipeline {
           agent any
           steps {
               echo "HTTP request to verify application health check"
+              sh "curl http://localhost:8080/health"
           }
         }
         stage('Verify regression tests') {
           agent any
           steps {
               echo "Running regression test suite"
+              sh "curl http://localhost:8080/"
           }
         }
       }
