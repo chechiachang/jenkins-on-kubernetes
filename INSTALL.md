@@ -1,4 +1,4 @@
-Jenkins X on Kubernetes
+Install Jenkins Platform on Kubernetes with jx
 ===
 
 [Jenkins](https://jenkins.io/) is an open source automation server. [Jenkins-X (jx)](https://jenkins.io/projects/jenkins-x) is a Jenkins sub-project for Jenkins-on-Kubernetes.
