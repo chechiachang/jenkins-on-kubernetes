@@ -29,6 +29,12 @@ pipeline {
 
     stage('Run & Verify') {
       steps {
+        container('mysql') {
+          echo "Running MySQL"
+        }
+        container('reids') {
+          echo "Running Redis"
+        }
         container('go') {
           sh "nohup ./bin/jenkins-x-on-kubernetes &"
         }
