@@ -31,8 +31,6 @@ pipeline {
       steps {
         container('go') {
           sh "nohup ./bin/jenkins-x-on-kubernetes &"
-          echo "HTTP request to verify home"
-          sh "curl http://localhost:8080/"
         }
       }
     }
@@ -44,6 +42,8 @@ pipeline {
             container('go') {
               echo "HTTP request to verify home"
               sh "curl http://localhost:8080/"
+              sleep 10
+              echo "Wake up"
             }
           }
         }
@@ -52,6 +52,8 @@ pipeline {
             container('go') {
               echo "HTTP request to verify application health check"
               sh "curl http://localhost:8080/health"
+              sleep 15
+              echo "Wake up"
             }
           }
         }
@@ -60,6 +62,8 @@ pipeline {
             container('go') {
               echo "Running regression test suite"
               sh "curl http://localhost:8080/"
+              sleep 5
+              echo "Wake up"
             }
           }
         }
