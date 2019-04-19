@@ -5,7 +5,7 @@ This is a example project to demonstrate a working pipeline with jenkins-x on Ku
 - Get started
 - Basic operations of jx
 
-For deployment of GKE and Jenkinx platform, check our [Install Jenkins with jx](#INSTALL.md)
+For deployment of GKE and Jenkinx platform, check our [Install Jenkins with jx](INSTALL.md)
 
 For more information about jx itself, check [Jenkins-X Github Repo](https://github.com/jenkins-x/jx)
 
